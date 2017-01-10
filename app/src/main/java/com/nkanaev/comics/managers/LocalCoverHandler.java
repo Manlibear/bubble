@@ -51,10 +51,9 @@ public class LocalCoverHandler extends RequestHandler {
             InputStream stream = parser.getPage(0);
 
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
+            //options.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(stream, null, options);
-            options.inSampleSize = Utils.calculateInSampleSize(options,
-                    Constants.COVER_THUMBNAIL_WIDTH, Constants.COVER_THUMBNAIL_HEIGHT);
+            //options.inSampleSize = Utils.calculateInSampleSize(options, Constants.COVER_THUMBNAIL_WIDTH, Constants.COVER_THUMBNAIL_HEIGHT);
             options.inJustDecodeBounds = false;
             stream.close();
             stream = parser.getPage(0);

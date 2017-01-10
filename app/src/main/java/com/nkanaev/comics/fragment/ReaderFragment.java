@@ -633,7 +633,7 @@ public class ReaderFragment extends Fragment implements View.OnTouchListener {
 
         AlertDialog dialog = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle)
                 .setTitle(titleRes)
-                .setMessage(newComic.getFile().getName())
+                .setMessage(newComic.getFile().getName().replaceFirst("[.][^.]+$", ""))
                 .setPositiveButton(R.string.switch_action_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -84,7 +84,7 @@ public class LibraryBrowserFragment extends Fragment
         mComicListView.setAdapter(new ComicGridAdapter());
         mComicListView.addItemDecoration(new GridSpacingItemDecoration(numColumns, spacing));
 
-        getActivity().setTitle(new File(getArguments().getString(PARAM_PATH)).getName());
+        getActivity().setTitle(new File(getArguments().getString(PARAM_PATH)).getName().replaceFirst("[.][^.]+$", ""));
         mPicasso = ((MainActivity) getActivity()).getPicasso();
 
         return view;
@@ -160,10 +160,23 @@ public class LibraryBrowserFragment extends Fragment
 
     private void findRecents() {
         mRecentItems.clear();
+        Boolean getNext = false;
 
         for (Comic c : mComics) {
-            if (c.updatedAt > 0) {
-                mRecentItems.add(c);
+
+            //getNext is used to show that this comic has been read to the end, as such the next one in the series should be added to the recents list
+            if (c.updatedAt > 0 || getNext) {
+
+                getNext = false;
+                if(c.getCurrentPage() == c.getTotalPages()){
+                    getNext = true;
+                }
+                else
+                {
+                    mRecentItems.add(c);
+
+                }
+
             }
         }
 
@@ -318,7 +331,7 @@ public class LibraryBrowserFragment extends Fragment
             if (i == ITEM_VIEW_TYPE_HEADER_RECENT) {
                 TextView view = (TextView) LayoutInflater.from(ctx)
                         .inflate(R.layout.header_library, viewGroup, false);
-                view.setText(R.string.library_header_recent);
+                view.setText(R.string.library_header_current);
 
                 int spacing = (int) getResources().getDimension(R.dimen.grid_margin);
                 RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();
@@ -375,7 +388,7 @@ public class LibraryBrowserFragment extends Fragment
         }
 
         public void setupComic(Comic comic) {
-            mTitleTextView.setText(comic.getFile().getName());
+            mTitleTextView.setText(comic.getFile().getName().replaceFirst("[.][^.]+$", ""));
             mPagesTextView.setText(Integer.toString(comic.getCurrentPage()) + '/' + Integer.toString(comic.getTotalPages()));
 
             mPicasso.load(LocalCoverHandler.getComicCoverUri(comic))
